@@ -10,3 +10,6 @@ test_dataset_name: 'test.csv'
 target_name: 'target'
 test_size: 0.33
 random_state: 42
+
+vars_imputer: ['RendaMensal', 'NumeroDeDependentes']
+vars_discretizer: ['TaxaDeUtilizacaoDeLinhasNaoGarantidas', 'TaxaDeEndividamento', 'RendaMensal']
