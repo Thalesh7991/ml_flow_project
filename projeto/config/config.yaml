@@ -13,3 +13,6 @@ random_state: 42
 
 vars_imputer: ['RendaMensal', 'NumeroDeDependentes']
 vars_discretizer: ['TaxaDeUtilizacaoDeLinhasNaoGarantidas', 'TaxaDeEndividamento', 'RendaMensal']
+
+
+model_name: 'modelo.joblib'
