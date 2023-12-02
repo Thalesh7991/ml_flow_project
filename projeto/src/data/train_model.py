@@ -2,7 +2,7 @@ import os
 import sys 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../src'))
 
-from utils.utils import load_config_file
+from utils.utils import load_config_file, save_model
 
 import pandas as pd
 import joblib
@@ -14,7 +14,8 @@ class TrainModel():
     
     def train(self, model):
         model.fit(self.dados_X, self.dados_y)
-        joblib.dump(model, self.model_name)
+        save_model(model)
+        #joblib.dump(model, self.model_name)
         return model
     
 
