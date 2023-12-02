@@ -1,17 +1,29 @@
-from pandera import Check, Column, DataFrameSchema
 import pandas as pd
+import os 
+import sys 
+sys.path.append(os.path.join(os.path.dirname(__file__), '../src'))
+
+from pandera import Check, Column, DataFrameSchema
+import structlog
+logger = structlog.getLogger()
+
+from utils.utils import load_config_file
+
+
+
 
 class DataValidation:
-    def __init__(self, columns_to_use) -> None:
-        self.columns_to_use = columns_to_use
+    def __init__(self) -> None:
+        self.columns_to_use = load_config_file().get('columns_to_use')
+        
 
     def check_shape_data(self, dataframe: pd.DataFrame)-> bool:
         try:
-            print('Validação iniciou..')
+            logger.info('Validação iniciou..')
             dataframe.columns = self.columns_to_use
             return True
         except Exception as e:
-            print(f'Validação errou: {e}')
+            logger.error(f'Validação errou: {str(e)}')
             return False
     
     def check_columns(self,dataframe: pd.DataFrame)-> bool:
@@ -32,18 +44,18 @@ class DataValidation:
             )
         try:
             schema.validate(dataframe)
-            print("Validation columns passed...")
+            logger.info("Validation columns passed...")
             return True
         except pandera.errors.SchemaErrors as exc:
-            print("Validation columns failed...")
+            logger.error("Validation columns failed...")
             pandera.display(exc.failure_cases)
         return False
     
     def run(self, dataframe: pd.DataFrame) -> bool:
         if self.check_shape_data(dataframe) and self.check_columns(dataframe):
-            print('Validacao com sucesso.')
+            logger.info('Validacao com sucesso.')
             return True 
         else:
-            print('Validacao falhou.')
+            logger.info('Validacao falhou.')
             return False
 
