@@ -35,10 +35,6 @@ class ModelEvaluation():
     def evaluate_predictions(y_true, y_pred_proba):
         return roc_auc_score(y_true, y_pred_proba)
 
-
-    
-    
-    
     def eval_metrics(self, dados_reais, dados_preditos):
         try:
             roc_auc = roc_auc_score(dados_reais, dados_preditos)
