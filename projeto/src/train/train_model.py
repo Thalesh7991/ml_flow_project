@@ -2,6 +2,7 @@ import os
 import sys 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../src'))
 
+
 from utils.utils import load_config_file, save_model
 
 import pandas as pd
@@ -30,15 +31,16 @@ class TrainModel():
         self.dados_y = dados_y
         self.model_name = load_config_file().get('model_name')
     
-    def get_best_model():
+    def get_best_model(self):
         logger.info('Obtendo melhor modelo..')
 
         df_mlflow = mlflow.search_runs(filter_string='metrics.valid_roc_auc < 1').sort_values('metrics.valid_roc_auc', ascending=False)
         run_id = df_mlflow.loc[df_mlflow['metrics.valid_roc_auc'].idxmax()]['run_id']
-        df_best_params = df_mlflow.loc[df_mlflow['run_id'] == run_id]['params.discretizer', 'params.warm_start', 'params.multi_class',
+        print(df_mlflow.columns)
+        df_best_params = df_mlflow.loc[df_mlflow['run_id'] == run_id][['params.discretizer', 'params.warm_start', 'params.multi_class',
                                                                       'params.solver', 'params.tol', 'params.fit_intercept', 'params.C',
                                                                       'params.imputer', 'params.scaler', 'params.max_iter',
-                                                                      'params.class_weight']
+                                                                      'params.class_weight']]
         
         best_roc_auc = df_mlflow.loc[df_mlflow['metrics.valid_roc_auc'].idxmax()]['metrics.valid_roc_auc']
         return best_roc_auc, df_best_params
@@ -49,20 +51,20 @@ class TrainModel():
 
         with mlflow.start_run(run_name='final_model'):
             mlflow.set_tag('model_name', self.model_name)
-
             model = LogisticRegression(warm_start=eval(df_best_params['params.warm_start'].values[0]),
-                                       multi_class=eval(df_best_params['params.multi_class'].values[0]),
-                                       solver=eval(df_best_params['params.solver'].values[0]),
+                                       multi_class=df_best_params['params.multi_class'].values[0],
+                                       solver=df_best_params['params.solver'].values[0],
                                        tol=eval(df_best_params['params.tol'].values[0]),
                                         fit_intercept=eval(df_best_params['params.fit_intercept'].values[0]),
                                         C=eval(df_best_params['params.C'].values[0]),
                                         max_iter=eval(df_best_params['params.max_iter'].values[0]),
-                                        class_weight=eval(df_best_params['params.class_wight'].values[0]) )
+                                        class_weight=eval(df_best_params['params.class_weight'].values[0]) )
             
             pipe = Pipeline([
                 ('imputer', eval(df_best_params['params.imputer'].values[0])),
                 ('discretizer', eval(df_best_params['params.discretizer'].values[0])),
-                ('scaler', eval(df_best_params['params.discretizer'].values[0]))
+                ('scaler', eval(df_best_params['params.discretizer'].values[0])),
+                ('model', model)
             ])
 
             pipe.fit(self.dados_X, self.dados_y)
