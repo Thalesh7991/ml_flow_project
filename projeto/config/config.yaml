@@ -5,7 +5,7 @@ columns_to_use: ['target', 'TaxaDeUtilizacaoDeLinhasNaoGarantidas', 'Idade',
        'NumeroDeVezes60-89DiasAtrasoNaoPior', 'NumeroDeDependentes']
 
 train_dataset_name: 'train.csv'
-test_dataset_name: 'test.csv'
+test_dataset_name: "test.csv"
 
 target_name: 'target'
 test_size: 0.33
@@ -19,3 +19,5 @@ model_name: 'modelo.joblib'
 
 uri_tracking: 'http://127.0.0.1:5000'
 experiment: 'prob_loan'
+
+app_name: "prob-loan-sagemaker"

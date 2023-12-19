@@ -1,2 +1,8 @@
 train:
-	python src/train/train_model.py
+	cd src/train; python /train_model.py
+
+deploy_aws:
+	python src/deploy/aws/deployment.py
+
+inference_aws:
+	python src/deploy/aws/inference.py
