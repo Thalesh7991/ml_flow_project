@@ -6,3 +6,6 @@ deploy_aws:
 
 inference_aws:
 	python src/deploy/aws/inference.py
+
+monitoring:
+	python src/monitoramento/monitor.py
